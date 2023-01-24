@@ -8,16 +8,16 @@
 import Foundation
 
 /// Модель представления экрана с аукционом.
-final class ViewModel: ObservableObject {
+final class AuctionViewModel: ObservableObject {
 
-    // MARK: - public properties
+    // MARK: - Public properties
 
     @Published var currentCompany = Company(
         name: Constants.mersedecName,
         models: [Constants.mercedesAName, Constants.mercedesCName, Constants.mercedesDName]
     )
 
-    @Published var company = [
+    @Published var companies = [
         Company(
             name: Constants.mersedecName,
             models: [Constants.mercedesAName, Constants.mercedesCName, Constants.mercedesDName]
@@ -34,10 +34,10 @@ final class ViewModel: ObservableObject {
 
     @Published var currentLotPrice: Float = 0
 
-    // MARK: - public methods
+    // MARK: - Public methods
 
     func setCurrentCompany(tag: Int) {
-        currentCompany = company[tag]
+        currentCompany = companies[tag]
     }
 
     func getModel(tag: Int) -> String {

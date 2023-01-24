@@ -10,16 +10,16 @@ import SwiftUI
 /// Представление активити контроллера.
 struct ActivityView: UIViewControllerRepresentable {
 
-    // MARK: - public properties
+    // MARK: - Public properties
 
     typealias UIViewControllerType = UIActivityViewController
     public var activityItems: [Any]
     public var applicationActivities: [UIActivity]?
 
-    // MARK: - public methods
+    // MARK: - Public methods
 
     func makeUIViewController(context: Context) -> UIActivityViewController {
-        return UIActivityViewController(activityItems: activityItems, applicationActivities: applicationActivities)
+        UIActivityViewController(activityItems: activityItems, applicationActivities: applicationActivities)
     }
 
     func updateUIViewController(_ uiViewController: UIActivityViewController, context: Context) {}

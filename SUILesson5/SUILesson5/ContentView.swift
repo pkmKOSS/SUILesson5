@@ -10,7 +10,7 @@ import SwiftUI
 /// Контент представления экрана с аукционом.
 struct ContentView: View {
 
-    // MARK: - public properties
+    // MARK: - Public properties
 
     var body: some View {
         ZStack {
@@ -19,15 +19,15 @@ struct ContentView: View {
                 .offset(x: CGFloat(hstackOffset))
 
             VStack {
-                formWithCurrentCost
+                currentCostView
                 Spacer()
-                textIwthLotName
+                lotView
                 Spacer()
-                zstackWithImage
-                vstackWithPickers
-                textWithOffersCost
+                imageView
+                pickersView
+                offersCostView
                 offersCostSlider
-                vstackWithBetButtons
+                betButtonsView
             }
             .animation(.spring())
             .offset(y: CGFloat(vstackOffset))
@@ -36,7 +36,7 @@ struct ContentView: View {
 
     // MARK: - private properties
 
-    @ObservedObject private var viewModel = ViewModel()
+    @StateObject private var viewModel = AuctionViewModel()
     @State private var segmentIndexCompany = 0
     @State private var isShareShown = false
     @State private var segmentIndexCarsModel = 0
@@ -46,7 +46,7 @@ struct ContentView: View {
     @State private var priceStape: Float = 0
     @State private var vstackOffset: Float = 0
     @State private var hstackOffset: Float = -250
-    private var currentPrice = Int.random(in: 1000000...7000000)
+    private var currentPrice = Int.random(in: Constants.currentRandomPrice)
 
     // MARK: - private methods
 
@@ -84,40 +84,40 @@ struct ContentView: View {
                     self.vstackOffset = Constants.zeroOffset
                     self.hstackOffset = -Constants.oneThousandOffset
                 }
-                .frame(width: 250, height: 30, alignment: .center)
+                .frame(width: Constants.backToLotButtonWidth, height: Constants.backToLotButtonHeight, alignment: .center)
                 .background(Color.yellow)
                 .foregroundColor(.white)
-                .cornerRadius(10)
+                .cornerRadius(Constants.backToLotButtonCornerRadius)
 
                 Button(action: {
                     self.isShareShown = true
                 }, label: {
-                    Image(systemName: "arrowshape.turn.up.right.fill")
+                    Image(systemName: Constants.shareButtonImageName)
                 }).sheet(isPresented: $isShareShown, content: {
-                    ActivityView(activityItems: ["message test"])
+                    ActivityView(activityItems: [])
                 })
-                .frame(width: 40, height: 30, alignment: .center)
+                .frame(width: Constants.shareButtonWidth, height: Constants.shareButtonHeight, alignment: .center)
                 .background(Color.green)
                 .foregroundColor(.white)
-                .cornerRadius(10)
+                .cornerRadius(Constants.backToLotButtonCornerRadius)
             }
         }
     }
 
-    private var formWithCurrentCost: some View {
+    private var currentCostView: some View {
         Form {
             Text("\(Constants.currentCostName)\(currentPrice + Int(viewModel.currentLotPrice)) \(Constants.rublesName)")
         }
     }
 
-    private var textIwthLotName: some View {
-            Text("Лот № \(segmentIndexCarsModel + 1) - \(viewModel.company[segmentIndexCompany].name)")
-                .font(.system(.headline))
+    private var lotView: some View {
+        Text("\(Constants.textWithOffersWidth)\(segmentIndexCarsModel + 1) - \(viewModel.companies[segmentIndexCompany].name)")
+            .font(.system(.headline))
     }
 
-    private var zstackWithImage: some View {
+    private var imageView: some View {
         ZStack {
-            RoundedRectangle(cornerRadius: 10)
+            RoundedRectangle(cornerRadius: Constants.backToLotButtonCornerRadius)
                 .fill(Color.gray)
                 .offset(x: CGFloat(offsetX))
                 .padding()
@@ -125,12 +125,12 @@ struct ContentView: View {
             Image(viewModel.currentCompany.models[segmentIndexCarsModel])
                 .resizable()
                 .scaledToFit()
-                .frame(width: 300, height: 300)
+                .frame(width: Constants.autoImageWidht, height: Constants.autoImageHeight)
                 .offset(x: CGFloat(offsetX))
         }
     }
 
-    private var vstackWithPickers: some View {
+    private var pickersView: some View {
         VStack {
             Picker(selection: Binding(get: {
                 self.segmentIndexCompany
@@ -138,22 +138,24 @@ struct ContentView: View {
                 self.segmentIndexCompany = newValue
                 self.viewModel.setCurrentCompany(tag: newValue)
             }), label: Text(Constants.emptyString)) {
-                ForEach(0..<self.viewModel.company.count) {
-                    Text(self.viewModel.company[$0].name).tag($0)
+                ForEach(0..<self.viewModel.companies.count) {
+                    Text(self.viewModel.companies[$0].name).tag($0)
                 }
-            }.pickerStyle(.segmented).padding()
+            }
+            .pickerStyle(.segmented).padding()
 
             Picker(selection: $segmentIndexCarsModel, label: Text(Constants.emptyString)) {
                 ForEach(0..<self.viewModel.currentCompany.models.count) {
                     Text(self.viewModel.getModel(tag: $0)).tag($0)
                 }
-            }.pickerStyle(.segmented).padding()
+            }
+            .pickerStyle(.segmented).padding()
         }
     }
 
-    private var textWithOffersCost: some View {
+    private var offersCostView: some View {
         Text("\(currentPrice + Int(priceStape))")
-            .frame(width: 150, height: 35)
+            .frame(width: Constants.textWithOffersWidth, height: Constants.textWidhtOffersheight)
             .border(Color.green)
     }
 
@@ -174,14 +176,15 @@ struct ContentView: View {
         .padding()
     }
 
-    private var vstackWithBetButtons: some View {
+    private var betButtonsView: some View {
         VStack {
 
             Button {
                 self.isBetAlertShown = true
             } label: {
                 Text(Constants.makeBetName)
-            }.alert(Text(Constants.betQuestionName), isPresented: $isBetAlertShown) {
+            }
+            .alert(Text(Constants.betQuestionName), isPresented: $isBetAlertShown) {
                 HStack {
                     Button(Constants.yesName) {
                         self.viewModel.setCurrentLot(price: priceStape)
@@ -189,19 +192,19 @@ struct ContentView: View {
                     Button(Constants.noName) {}
                 }
             }
-            .frame(width: 250, height: 40, alignment: .center)
+            .frame(width: Constants.backToLotButtonWidth, height: Constants.backToLotButtonHeight, alignment: .center)
             .background(Color.green)
             .foregroundColor(.white)
-            .cornerRadius(10)
+            .cornerRadius(Constants.backToLotButtonCornerRadius)
 
             Button(Constants.infoName) {
                 self.vstackOffset = Constants.oneThousandOffset
                 self.hstackOffset = Constants.zeroOffset
             }
-            .frame(width: 250, height: 30, alignment: .center)
+            .frame(width: Constants.backToLotButtonWidth, height: Constants.backToLotButtonHeight, alignment: .center)
             .background(Color.green)
             .foregroundColor(.white)
-            .cornerRadius(10)
+            .cornerRadius(Constants.backToLotButtonCornerRadius)
         }
     }
 }

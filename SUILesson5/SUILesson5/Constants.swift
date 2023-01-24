@@ -5,6 +5,8 @@
 //  Created by Григоренко Александр Игоревич on 20.01.2023.
 //
 
+import Foundation
+
 /// Публичные константы
 enum Constants {
     static let lowBetСoefficient: Float = 0.10
@@ -46,5 +48,17 @@ enum Constants {
     static let backToLot = "Вернуться к лоту"
     static let emptyString = ""
     static let shareWithFriends = "Поделиться с друзьями"
-    static let shareButtonImageName = "arrow.up.forward.app"
+    static let currentRandomPrice = 1000000...7000000
+    static let backToLotButtonWidth: CGFloat = 250
+    static let backToLotButtonHeight: CGFloat = 30
+    static let backToLotButtonImageName = "arrowshape.turn.up.right.fill"
+    static let backToLotButtonCornerRadius: CGFloat = 10
+    static let shareButtonImageName = "arrowshape.turn.up.right.fill"
+    static let shareButtonWidth: CGFloat = 40
+    static let shareButtonHeight: CGFloat = 30
+    static let autoImageWidht: CGFloat = 300
+    static let autoImageHeight: CGFloat = 300
+    static let textWithOffersWidth: CGFloat = 150
+    static let textWidhtOffersheight: CGFloat = 35
+    static let textWithCurrentPriceLotPartName = "Лот № "
 }
